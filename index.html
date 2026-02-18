@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | HEM MOTORS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root { --primary: #D32F2F; --dark: #0f0f0f; --light: #f4f4f4; --silver: #C0C0C0; --font-heading: 'Michroma', sans-serif; --font-body: 'Montserrat', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--dark); color: var(--light); font-family: var(--font-body); overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* Light mode is now the exception */
+        body:not(.dark-mode) { --dark: #f4f6f8; --light: #111111; --silver: #555555; }
+        body:not(.dark-mode) nav { background: #fff; border-bottom: 1px solid #ddd; }
+        body:not(.dark-mode) footer { background: #f9f9f9; border-top: 1px solid #ddd; }
+        body:not(.dark-mode) .featured-card { background: rgba(255, 255, 255, 0.8); border: 1px solid #eee; }
+        body:not(.dark-mode) .why-choose-us { background: #fff; }
+        body:not(.dark-mode) .service-card { background: #f9f9f9; border-color: #eee; }
+        body:not(.dark-mode) .review-card { background: #fff; }
+
+        /* NAV */
+        nav { padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; transition: background-color 0.4s ease, padding 0.4s ease; background: transparent; }
+        nav.scrolled { background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); padding: 15px 50px; border-bottom: 1px solid #222; }
+        .logo { font-family: var(--font-heading); font-size: 1.5rem; color: var(--light); text-decoration: none; }
+        .nav-links a { color: var(--light); text-decoration: none; margin-left: 20px; text-transform: uppercase; font-size: 0.8rem; }
+
+        /* HERO */
+        .home-hero { height: 100vh; position: relative; display: flex; align-items: center; justify-content: center; color: #fff; text-align: center; overflow: hidden; }
+        .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease-in-out, transform 10s linear; transform: scale(1.05); }
+        .hero-slide.active { opacity: 1; transform: scale(1.15); }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.4)); z-index: 1; }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-content h1 { font-family: var(--font-heading); font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 20px; line-height: 1.2; }
+        .hero-content p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 30px; }
+        .hero-cta .btn { margin: 0 10px; padding: 15px 30px; border-radius: 5px; text-decoration: none; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
+        .hero-cta .btn-primary { background: var(--primary); color: #fff; border: 2px solid var(--primary); }
+        .hero-cta .btn-primary:hover { background: transparent; }
+        .hero-cta .btn-secondary { background: transparent; color: #fff; border: 2px solid #fff; }
+        .hero-cta .btn-secondary:hover { background: #fff; color: #000; }
+
+        /* GENERAL */
+        section { padding: 120px 50px; }
+        .section-title { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 50px; text-align: center; text-transform: uppercase; }
+        
+        /* FEATURED CARS */
+        .featured-cars-section { padding: 120px 0; overflow: hidden; }
+        .car-carousel-wrapper { display: flex; }
+        .car-carousel { display: flex; flex-shrink: 0; animation: horizontal-scroll 80s linear infinite; }
+        @keyframes horizontal-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .featured-card { min-width: 350px; margin: 0 20px; border-radius: 15px; overflow: hidden; position: relative; cursor: pointer; transition: transform 0.4s ease, box-shadow 0.4s ease; background: rgba(40, 40, 40, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .featured-card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px -5px var(--primary); }
+        .featured-card img { width: 100%; height: 220px; object-fit: cover; }
+        .featured-card .info { padding: 20px; }
+        .featured-card .info h3 { margin-bottom: 15px; font-size: 1.1rem; }
+        .car-details { display: flex; justify-content: space-between; color: var(--silver); font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+        .car-details strong { color: var(--light); display: block; font-size: 1rem; }
+        .view-details-btn { position: absolute; bottom: -60px; left: 0; width: 100%; background: var(--primary); color: #fff; text-align: center; padding: 15px; text-decoration: none; font-weight: bold; transition: bottom 0.4s ease; }
+        .featured-card:hover .view-details-btn { bottom: 0; }
+
+        /* WHY CHOOSE US */
+        .why-choose-us { background: #000; text-align: center; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 50px; }
+        .service-card { padding: 40px 20px; border: 1px solid #222; transition: 0.3s; border-radius: 5px; background: #111; }
+        .service-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .service-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 20px; }
+        .service-card h3 { margin-bottom: 15px; font-family: var(--font-heading); font-size: 1.2rem; }
+        .service-card p { color: var(--silver); font-size: 0.9rem; line-height: 1.6; }
+
+        /* PARALLAX */
+        .parallax-showcase { background: url('https://images.unsplash.com/photo-1517524206127-48bbd363f3d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') fixed center/cover; position: relative; color: #fff; text-align: center; padding: 200px 50px; }
+        .parallax-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1; }
+        .parallax-content { position: relative; z-index: 2; }
+        .parallax-content h2 { font-family: var(--font-heading); font-size: 3rem; }
+
+        /* TESTIMONIALS */
+        .testimonials-section { overflow: hidden; background: #000; }
+        .testimonial-slider-container { display: flex; }
+        .testimonial-slider { display: flex; flex-shrink: 0; animation: horizontal-scroll 90s linear infinite; }
+        .review-card { min-width: 400px; background: #111; padding: 30px; border-radius: 10px; margin: 0 20px; border-top: 3px solid var(--primary); }
+        .review-header { display: flex; align-items: center; margin-bottom: 20px; }
+        .review-header img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
+        .review-header .stars { color: gold; }
+        .review-card p { color: var(--silver); font-style: italic; }
+
+        /* CTA */
+        .cta-section { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover; color: #fff; text-align: center; padding: 100px 50px; }
+        .cta-section h2 { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 20px; }
+        .cta-btn { background: var(--primary); color: #fff; padding: 15px 40px; font-weight: bold; text-transform: uppercase; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 20px; transition: 0.3s; }
+        .cta-btn:hover { background: #000; color: #fff; }
+        
+        /* FOOTER */
+        footer { background: #000; padding: 50px; border-top: 1px solid #222; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px; }
+        .social-icons a { color: var(--silver); margin-right: 15px; font-size: 1.2rem; transition: color 0.3s; display: inline-block; }
+        .social-icons a:hover { color: var(--primary); }
+
+        @media (max-width: 768px) {
+            nav { padding: 15px 20px; }
+            nav.scrolled { padding: 10px 20px; }
+            section { padding: 80px 20px; }
+            .parallax-showcase { padding: 120px 20px; }
+            .featured-card, .review-card { min-width: 300px; }
+            footer { justify-content: center; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">HEM MOTORS</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="inventory.html">Cars</a>
+            <a href="contact.html">Financing</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <i class="fas fa-sun" id="themeToggle" style="cursor: pointer; margin-left: 20px; color: var(--light);"></i>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="home-hero">
+        <div class="hero-slider" id="heroSlider"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Speed. Class. Power.</h1>
+            <p>Where Your Dream Car Meets the Road. Welcome to HEM Motors.</p>
+            <div class="hero-cta">
+                <a href="inventory.html" class="btn btn-primary">Browse Inventory</a>
+                <a href="contact.html" class="btn btn-secondary">Book Test Drive</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- FEATURED CARS -->
+    <section class="featured-cars-section">
+        <div class="car-carousel-wrapper">
+            <div class="car-carousel" id="featured-cars-carousel">
+                <!-- JS will inject cars here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="why-choose-us">
+        <h2 class="section-title">Why Choose HEM Motors</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-certificate service-icon"></i>
+                <h3>Certified Vehicles</h3>
+                <p>Every car undergoes a rigorous inspection to ensure peak performance.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-tags service-icon"></i>
+                <h3>Affordable Prices</h3>
+                <p>Luxury and performance at prices that put you in the driver's seat.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-shield-alt service-icon"></i>
+                <h3>Warranty Guaranteed</h3>
+                <p>Drive with confidence knowing you're covered by our comprehensive warranty.</p>
+            </div>
+             <div class="service-card">
+                <i class="fas fa-hand-holding-usd service-icon"></i>
+                <h3>Flexible Financing</h3>
+                <p>We work with you to find financial solutions that fit your lifestyle.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PARALLAX SHOWCASE -->
+    <section class="parallax-showcase">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content">
+            <h2>Engineered for Excellence.</h2>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials-section">
+        <h2 class="section-title">What Our Clients Say</h2>
+        <div class="testimonial-slider-container">
+            <div class="testimonial-slider" id="testimonial-slider">
+                <!-- JS will inject reviews here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="cta-section">
+        <h2>Visit HEM Motors Today & Drive Away Happy.</h2>
+        <a href="https://www.google.com/maps" target="_blank" class="cta-btn">Get Directions</a>
+    </section>
+
+    <footer>
+        <a href="index.html" class="logo">HEM MOTORS</a>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p style="color: var(--silver); font-size: 0.8rem;">&copy; 2024 HEM MOTORS. All rights reserved.</p>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- THEME LOGIC ---
+        const toggleBtn = document.getElementById('themeToggle');
+        if (localStorage.getItem('theme') !== 'light') {
+            document.body.classList.add('dark-mode'); // Default to dark
+            toggleBtn.classList.replace('fa-sun', 'fa-moon');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light'); // Keep dark/light logic
+            toggleBtn.classList.replace(isDark ? 'fa-sun' : 'fa-moon', isDark ? 'fa-moon' : 'fa-sun');
+        });
+
+        // --- STICKY NAV ---
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // --- DEFAULT DATA ---
+        if (!localStorage.getItem('hemMotorsCars')) {
+            const defaultCars = [
+                { name: 'Phantom Black Edition', price: 'KES 18,000,000', year: 2024, mileage: '0 mi', condition: 'New', fuelType: 'Petrol', imageUrl: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', description: 'Experience the pinnacle of luxury with the Phantom Black Edition.', isHero: true },
+                { name: 'GT Speedster', price: 'KES 25,500,000', year: 2023, mileage: '500 mi', condition: 'New', fuelType: 'Petrol', imageUrl: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', description: 'Built for speed and elegance.', isHero: true },
+                { name: 'Vantage Coupe', price: 'KES 21,000,000', year: 2024, mileage: '100 mi', condition: 'New', fuelType: 'Petrol', imageUrl: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', description: 'A timeless classic re-engineered for the future.', isHero: true },
+                { name: 'Azure Convertible', price: 'KES 29,000,000', year: 2024, mileage: '50 mi', condition: 'New', fuelType: 'Petrol', imageUrl: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', description: 'Feel the wind in complete silence.', isHero: true },
+                { name: 'Mercedes-Benz C-Class', price: 'KES 4,500,000', year: 2018, mileage: '45,000 mi', condition: 'Used', fuelType: 'Diesel', imageUrl: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', description: 'Reliable luxury sedan, well maintained.' },
+                { name: 'Toyota Land Cruiser Prado', price: 'KES 6,800,000', year: 2019, mileage: '30,000 mi', condition: 'Used', fuelType: 'Diesel', imageUrl: 'https://images.unsplash.com/photo-1594502184342-28ef379c3c53?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', description: 'Off-road capability with premium comfort.' },
+                { name: 'BMW X5 xDrive', price: 'KES 5,200,000', year: 2017, mileage: '55,000 mi', condition: 'Used', fuelType: 'Diesel', imageUrl: 'https://images.unsplash.com/photo-1556189250-72ba9545225a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', description: 'Spacious SUV with dynamic driving performance.' },
+                { name: 'Subaru Outback', price: 'KES 3,500,000', year: 2020, mileage: '25,000 mi', condition: 'Used', fuelType: 'Petrol', imageUrl: 'https://images.unsplash.com/photo-1626218174358-7769486c4b79?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80', description: 'Versatile crossover perfect for family adventures.' }
+            ];
+            localStorage.setItem('hemMotorsCars', JSON.stringify(defaultCars));
+        }
+        const cars = JSON.parse(localStorage.getItem('hemMotorsCars')) || [];
+
+        // --- HERO SLIDER ---
+        const heroSlider = document.getElementById('heroSlider');
+        const heroCars = cars.filter(car => car.isHero);
+        const heroSlidesToShow = heroCars.length > 0 ? heroCars : [cars[0]];
+
+        if (heroSlider && heroSlidesToShow.length > 0) {
+            heroSlider.innerHTML = heroSlidesToShow.map((car, index) => `
+                <div class="hero-slide ${index === 0 ? 'active' : ''}" style="background-image: url('${car.imageUrl}');"></div>
+            `).join('');
+
+            if (heroSlidesToShow.length > 1) {
+                let currentSlide = 0;
+                const slides = document.querySelectorAll('.hero-slide');
+                setInterval(() => {
+                    slides[currentSlide].classList.remove('active');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active');
+                }, 6000);
+            }
+        }
+
+        // --- FEATURED CARS CAROUSEL ---
+        const featuredCarousel = document.getElementById('featured-cars-carousel');
+        if (featuredCarousel && cars.length > 0) {
+            const featuredCars = cars.slice(0, 8); // Show first 8 cars
+            const carouselContent = featuredCars.map((car, index) => `
+                <div class="featured-card" onclick="window.location.href='details.html?id=${index}'">
+                    <img src="${car.imageUrl}" alt="${car.name}">
+                    <div class="info">
+                        <h3>${car.name}</h3>
+                        <div class="car-details">
+                            <span>Price<strong>${car.price}</strong></span>
+                            <span>Year<strong>${car.year}</strong></span>
+                            <span>Fuel<strong>${car.fuelType}</strong></span>
+                        </div>
+                    </div>
+                    <a href="details.html?id=${index}" class="view-details-btn">View Details</a>
+                </div>
+            `).join('');
+            // Duplicate for infinite scroll
+            featuredCarousel.innerHTML = carouselContent + carouselContent;
+        }
+
+        // --- TESTIMONIALS SLIDER ---
+        const testimonialSlider = document.getElementById('testimonial-slider');
+        const reviews = [
+            { name: 'James D.', stars: 5, text: "The service at HEM MOTORS is unparalleled. I found my dream car within minutes.", image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' },
+            { name: 'Sarah L.', stars: 5, text: "Professional, fast, and transparent. The best dealership experience I've ever had.", image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' },
+            { name: 'Michael R.', stars: 5, text: "Truly a luxury experience from start to finish. Highly recommended for any enthusiast.", image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' },
+            { name: 'Emily K.', stars: 5, text: "They found the exact spec I was looking for and handled everything. Flawless service.", image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' }
+        ];
+        if (testimonialSlider) {
+            const reviewContent = reviews.map(review => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="${review.image}" alt="${review.name}">
+                        <div>
+                            <h4>${review.name}</h4>
+                            <div class="stars">${'★'.repeat(review.stars)}${'☆'.repeat(5 - review.stars)}</div>
+                        </div>
+                    </div>
+                    <p>"${review.text}"</p>
+                </div>
+            `).join('');
+            // Duplicate for infinite scroll
+            testimonialSlider.innerHTML = reviewContent + reviewContent;
+        }
+
+        // --- GSAP ANIMATIONS ---
+        gsap.from(".hero-content h1", { y: 50, opacity: 0, duration: 1, delay: 0.5 });
+        gsap.from(".hero-content p", { y: 50, opacity: 0, duration: 1, delay: 0.8 });
+        gsap.from(".hero-cta", { y: 50, opacity: 0, duration: 1, delay: 1.1 });
+
+        gsap.from(".featured-cars-section .section-title", {
+            scrollTrigger: {
+                trigger: ".featured-cars-section",
+                start: "top 75%",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8
+        });
+
+        gsap.from(".service-card", {
+            scrollTrigger: {
+                trigger: ".why-choose-us",
+                start: "top 75%",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.2
+        });
+
+        gsap.from(".parallax-content h2", {
+            scrollTrigger: {
+                trigger: ".parallax-showcase",
+                start: "top 60%",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 1.2
+        });
+
+        gsap.from(".testimonials-section .section-title", {
+            scrollTrigger: {
+                trigger: ".testimonials-section",
+                start: "top 75%",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8
+        });
+    </script>
+</body>
+</html>
